@@ -68,7 +68,7 @@ if __name__ == "__main__":
 以下は、要件に基づいて作成された VBScript ファイルの例です。
 拡張子 .wsf を持つファイルを作成し、以下のスクリプトを保存してください。
 ```
-```wsf
+```vbscript
 <job id="DownloadGitRepo">
   <script language="VBScript">
 
