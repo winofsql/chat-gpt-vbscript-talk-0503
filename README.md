@@ -220,3 +220,72 @@ If objFSO.FolderExists(repoPath & "\.git") Then
     objFSO.DeleteFolder repoPath & "\.git"
 End If
 ```
+
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```
+Widows の .bat でバッチファイルを作成してください
+- 指定した URL から git コマンドでリポジトリをダウンロードする
+- .git フォルダを削除する
+- リポジトリ名に -999999 のフォーマットで名前を変更する
+- 999999 は今の西暦の下一桁と月日
+- 月や日が一桁になる場合は、前へ0 を付加する
+- 同じ名前のリポジトリ名を持つフォルタ゛がある場合は、後ろに -9 のフォーマットで連番を付加していく
+```
+
+### ChatGPT
+```
+以下は、Windows のバッチファイルを使用して、指定した URL から git コマンドでリポジトリをダウンロードし、
+.git フォルダを削除して、リポジトリ名を変更するバッチファイルの例です。
+```
+
+```bat
+@echo off
+
+REM URL of the repository to download
+set url=https://github.com/username/repo.git
+
+REM Get the name of the repository
+for /f "delims=/ tokens=4" %%i in ("%url%") do set "repoName=%%~ni"
+
+REM Name of the folder where the repository will be saved
+set repoFolder=C:\repos
+
+REM Create the repository folder if it doesn't exist
+if not exist "%repoFolder%" mkdir "%repoFolder%"
+
+REM Create the repository path
+set "repoPath=%repoFolder%\%repoName%"
+
+REM Check if the repository folder already exists
+if exist "%repoPath%" (
+    REM Get the current date and time
+    for /f "tokens=1-3 delims=/" %%a in ("%date%") do set "suffix=%%c%%a%%b"
+    
+    REM Set the new repository name
+    set "newRepoName=%repoName%-%suffix%"
+    
+    REM Check if the repository folder with the new name already exists
+    set "i=1"
+    :checkRepoName
+    if exist "%repoFolder%\%newRepoName%" (
+        set /a "i+=1"
+        set "newRepoName=%repoName%-%suffix%-%i%"
+        goto :checkRepoName
+    )
+    
+    REM Rename the existing repository folder
+    ren "%repoPath%" "%newRepoName%"
+    
+    REM Update the repository path
+    set "repoPath=%repoFolder%\%newRepoName%"
+)
+
+REM Clone the repository using git
+git clone "%url%" "%repoPath%"
+
+REM Check if the .git folder exists
+if exist "%repoPath%\.git" (
+    REM Delete the .git folder
+    rd /s /q "%repoPath%\.git"
+)
+```
