@@ -2,6 +2,7 @@
 
 若干日本語の誤字ありますが、それなりにうまくいってます
 
+![image](https://user-images.githubusercontent.com/1501327/235878616-973cf1d1-0299-4227-8445-6bb4942fd6df.png)
 ```txt
 VBScript でプログラムを作成してください
 - 指定した URL から git コマンドぶリポジトリをダウンロードする
@@ -54,4 +55,9 @@ def main():
 if __name__ == "__main__":
     main()
 
+```
+
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```txt
+拡張子 .wsf の VBScript で作成してください
 ```
