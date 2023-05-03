@@ -437,3 +437,37 @@ WScript.Echo sourceFilePath & " を " & destinationFilePath & " にコピーし�
 コピー先のフォルダが存在するかどうかを確認し、存在しない場合はCreateFolderメソッドを使用して作成します。
 最後に、Copyメソッドを使用してファイルをコピーします。最後に、WScript.Echoを使用して、結果をコンソールに出力します。
 ```
+
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```
+vbscript から外部実行として 7z.exe を使用して zip アーカイブを、
+アーカイブのファイル名部分をフォルダとして解凍するコードを作成してください
+```
+### ChatGPT
+```
+以下は、VBScriptを使用して7-Zipのコマンドラインツールである7z.exeを外部実行し、
+zipアーカイブを解凍するコード例です。フォルダ名部分は解凍先ディレクトリに指定されます。
+```
+```vbscript
+' 7-Zipのパス
+Const SevenZipPath = "C:\Program Files\7-Zip\7z.exe"
+
+' 解凍するzipアーカイブのパス
+Const ZipFilePath = "C:\example\example.zip"
+
+' 解凍先ディレクトリのパス
+Const ExtractDirPath = "C:\example\extract"
+
+' 7-Zipのコマンドライン引数
+Const SevenZipArgs = "x -o" & ExtractDirPath & " " & ZipFilePath
+
+' 7-Zipを外部実行
+Dim shell
+Set shell = CreateObject("WScript.Shell")
+shell.Run Chr(34) & SevenZipPath & Chr(34) & " " & SevenZipArgs, 0, True
+```
+```
+このコードでは、7-Zipのパスを `SevenZipPath`、解凍するzipアーカイブのパスを `ZipFilePath`、解凍先ディレクトリのパスを 
+`ExtractDirPath` に指定しています。7-Zipのコマンドライン引数は、解凍先ディレクトリを `-o` オプションで指定し、`x` オプションで
+解凍するzipアーカイブのパスを指定しています。最後に、`WScript.Shell`オブジェクトを使用して、7-Zipを外部実行しています。
+```
