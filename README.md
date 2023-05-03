@@ -471,3 +471,71 @@ shell.Run Chr(34) & SevenZipPath & Chr(34) & " " & SevenZipArgs, 0, True
 `ExtractDirPath` に指定しています。7-Zipのコマンドライン引数は、解凍先ディレクトリを `-o` オプションで指定し、`x` オプションで
 解凍するzipアーカイブのパスを指定しています。最後に、`WScript.Shell`オブジェクトを使用して、7-Zipを外部実行しています。
 ```
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```
+SevenZipPath の内容は レジストリから取得してください
+```
+
+### ChatGPT
+```
+以下は SevenZipPath をレジストリから取得するVBScriptの例です。
+レジストリのパスは環境によって異なる場合があるため、必要に応じて変更してください。
+```
+```vbscript
+' SevenZipPathのレジストリキーのパス
+Const SevenZipPathKey = "HKLM\SOFTWARE\7-Zip"
+
+' SevenZipPathのレジストリ値の名前
+Const SevenZipPathValueName = "Path"
+
+' SevenZipPathを取得する関数
+Function GetSevenZipPath()
+    Dim objReg, strValue
+    
+    ' レジストリオブジェクトを作成
+    Set objReg = GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\default:StdRegProv")
+    
+    ' SevenZipPathのレジストリ値を取得
+    objReg.GetStringValue HKEY_LOCAL_MACHINE, SevenZipPathKey, SevenZipPathValueName, strValue
+    
+    ' 取得したSevenZipPathを返す
+    GetSevenZipPath = strValue
+End Function
+```
+
+```
+この関数を呼び出すことで、SevenZipPathの値を取得できます。例えば、以下のようにして7z.exeを実行できます。
+```
+
+```vbscript
+' SevenZipPathから7z.exeのパスを取得
+Dim SevenZipPath
+SevenZipPath = GetSevenZipPath()
+
+' 7z.exeを実行
+Dim WshShell
+Set WshShell = CreateObject("WScript.Shell")
+WshShell.Run """" & SevenZipPath & "\7z
+```
+
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```
+WshShell オブジェクトの RegRead メソッドで取得してください
+```
+
+### ChatGPT
+```
+以下は、WshShell オブジェクトの RegRead メソッドを使用して、
+SevenZipPath の内容をレジストリから取得する VBScript コードの例です。
+```
+
+```vbscript
+Set WshShell = CreateObject("WScript.Shell")
+SevenZipPath = WshShell.RegRead("HKLM\SOFTWARE\7-Zip\Path")
+```
+
+```
+上記のコードでは、WshShell オブジェクトを作成し、RegRead メソッドを使用して HKLM\SOFTWARE\7-Zip\Path の値を取得しています。
+取得した値は SevenZipPath 変数に格納されます。このコードを実行すると、
+SevenZipPath 変数には 7-Zip のインストールフォルダのパスが格納されます。
+```
