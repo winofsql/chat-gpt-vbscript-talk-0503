@@ -145,3 +145,76 @@ if __name__ == "__main__":
   </script>
 </job>
 ```
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```txt
+リポジトリは、git コマンドを外部実行して、.git ファイルからフォルダを作成してください
+```
+
+### ChatGPT
+```
+以下は、VBScript を使用して外部の git コマンドを実行して、指定した URL からリポジトリをダウンロードし、
+.git フォルダを削除するコードです。また、同名のフォルダが存在する場合には、-9 のフォーマットで連番を
+付加していく処理も追加しています。
+```
+```vbscript
+Dim objShell, objFSO
+Dim url, repoName, repoFolder, repoPath, newRepoName, suffix, suffixMonth, suffixDay, serialNumber, i
+
+' URL of the repository to download
+url = "https://github.com/username/repo.git"
+
+' Get the name of the repository
+repoName = Right(url, InStr(StrReverse(url), "/") - 1)
+repoName = Left(repoName, InStr(repoName, ".") - 1)
+
+' Name of the folder where the repository will be saved
+repoFolder = "C:\repos"
+
+' Create a Shell object
+Set objShell = CreateObject("WScript.Shell")
+
+' Create a FileSystemObject
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+
+' Check if the repository folder exists
+If Not objFSO.FolderExists(repoFolder) Then
+    ' Create the repository folder
+    objFSO.CreateFolder(repoFolder)
+End If
+
+' Create the repository path
+repoPath = repoFolder & "\" & repoName
+
+' Check if the repository folder already exists
+If objFSO.FolderExists(repoPath) Then
+    ' Get the current date and time
+    suffix = Year(Date)
+    suffixMonth = Right("0" & Month(Date), 2)
+    suffixDay = Right("0" & Day(Date), 2)
+    suffix = suffix & suffixMonth & suffixDay
+    
+    ' Set the new repository name
+    newRepoName = repoName & "-" & suffix
+    
+    ' Check if the repository folder with the new name already exists
+    Do While objFSO.FolderExists(repoFolder & "\" & newRepoName)
+        ' Increment the serial number
+        i = i + 1
+        
+        ' Set the new repository name with a serial number
+        newRepoName = repoName & "-" & suffix & "-" & i
+    Loop
+    
+    ' Rename the existing repository folder
+    objFSO.MoveFolder repoPath, repoFolder & "\" & newRepoName
+End If
+
+' Clone the repository using git
+objShell.Run "git clone " & url & " " & repoPath
+
+' Check if the .git folder exists
+If objFSO.FolderExists(repoPath & "\.git") Then
+    ' Delete the .git folder
+    objFSO.DeleteFolder repoPath & "\.git"
+End If
+```
