@@ -545,7 +545,7 @@ SevenZipPath 変数には 7-Zip のインストールフォルダのパスが格
 Shell.Application を使用して自分自身を管理者権限で呼び出し直す vbscript のサンプルを作成してください
 ```
 
-### ChatGPT
+### 🔴 ChatGPT
 ```
 以下は、Shell.Application を使用して自分自身を管理者権限で呼び出し直す vbscript のサンプルコードです。
 ```
