@@ -539,3 +539,96 @@ SevenZipPath = WshShell.RegRead("HKLM\SOFTWARE\7-Zip\Path")
 取得した値は SevenZipPath 変数に格納されます。このコードを実行すると、
 SevenZipPath 変数には 7-Zip のインストールフォルダのパスが格納されます。
 ```
+
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```
+Shell.Application を使用して自分自身を管理者権限で呼び出し直す vbscript のサンプルを作成してください
+```
+
+### ChatGPT
+```
+以下は、Shell.Application を使用して自分自身を管理者権限で呼び出し直す vbscript のサンプルコードです。
+```
+```vbscript
+Set objShell = CreateObject("Shell.Application")
+
+' 管理者権限で実行するために、自分自身を再起動する
+If objShell.AppActivate("Windows Script Host") Then
+    objShell.ShellExecute "wscript.exe", Chr(34) & WScript.ScriptFullName & Chr(34), "", "runas", 1
+End If
+
+' もしくは以下のように自分自身のプロセスIDを取得して使用することもできます
+' pid = objShell.Windows.Item(objShell.Windows.Count - 1).ProcessID
+' objShell.ShellExecute "wscript.exe", Chr(34) & WScript.ScriptFullName & Chr(34), "", "runas", 1, pid
+```
+
+```
+このスクリプトでは、Shell.Application オブジェクトを作成し、AppActivate メソッドを使用して自分自身のウィンドウ
+をアクティブにします。その後、ShellExecute メソッドを使用して自分自身を管理者権限で再起動します。
+
+上記のコードでは、自分自身のプロセスIDを取得して、ShellExecute メソッドの 6 つめの引数として渡す方法も紹介しています。
+どちらの方法でも実行することができますが、どちらを使用しても同じ結果が得られます。
+```
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```
+初回の実行を引数無しにして、呼び出し直す時にダミーの引数を一つ与えて実現してください
+```
+
+### ChatGPT
+```
+以下は、初回の実行時には引数が与えられず、管理者権限で再起動する処理を行います。
+再起動後はダミーの引数を与えて、通常の処理を行うようになります。
+```
+```vbscript
+Option Explicit
+
+Dim WshShell, args
+Set WshShell = CreateObject("WScript.Shell")
+
+If WScript.Arguments.Count = 0 Then
+    ' 管理者権限で再起動するために自分自身を呼び出す
+    WshShell.Run "cmd /c echo Set UAC = CreateObject^(""Shell.Application""^) : UAC.ShellExecute ""wscript.exe"", """ & WScript.ScriptFullName & """, """""", ""runas"", 1 >> """ & WScript.ScriptFullName & ".tmp.vbs""", 0, True
+    WshShell.Run "wscript.exe """ & WScript.ScriptFullName & ".tmp.vbs""", 1, True
+    ' 一時ファイルを削除する
+    WshShell.Run "cmd /c del """ & WScript.ScriptFullName & ".tmp.vbs""", 0, True
+Else
+    ' ダミーの引数を取得する
+    Set args = WScript.Arguments
+    WScript.Echo "Dummy argument: " & args(0)
+    ' 通常の処理をここに記述する
+End If
+``` 
+```
+このコードでは、一時的な VBScript ファイルを作成して、管理者権限で再起動するためのコードを書き込んでいます。
+その後、WshShell.Run メソッドを使用して、VBScript ファイルを実行しています。
+再起動後にダミーの引数を取得し、その内容を表示しています。
+```
+![image](https://user-images.githubusercontent.com/1501327/235878641-947b906f-e138-46b5-8475-2bf04c169132.png)
+```
+Shell.Application を使用して自分自身を管理者権限で呼び出し直す vbscript のサンプルを作成してください
+- 初回の実行を引数無しにする
+- 呼び出し直す時にダミーの引数を一つ与えて実現する
+```
+
+### ChatGPT
+```
+以下は、Shell.Application を使用して自分自身を管理者権限で呼び出し直す VBScript サンプルです。
+```
+```vbscript
+' 現在のスクリプトのフルパスを取得
+strPath = WScript.ScriptFullName
+
+' 管理者権限で実行するために自分自身をシェルで再起動
+Set objShell = CreateObject("Shell.Application")
+If WScript.Arguments.Count = 0 Then
+    objShell.ShellExecute "wscript.exe", Chr(34) & strPath & Chr(34) & " dummy", "", "runas", 1
+ElseIf WScript.Arguments.Count = 1 And LCase(WScript.Arguments(0)) = "dummy" Then
+    ' ダミーの引数が渡された場合は、管理者権限で実行されたことを確認するためにメッセージを表示
+    MsgBox "このスクリプトは管理者権限で実行されています。", vbInformation, "確認"
+End If
+```
+```
+初回の実行では引数を与えずに実行し、2回目以降はダミーの引数を一つ与えて実行することで、
+自分自身を管理者権限で実行できます。また、2回目以降の実行では、
+理者権限で実行されたことを確認するためにメッセージを表示するようにしています。
+```
